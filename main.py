@@ -1,5 +1,5 @@
 import pygame
-from objects import Paddle, Brick
+from objects import Paddle, Brick, Ball
 
 pygame.init()
 
@@ -7,7 +7,7 @@ SCREEN_WIDTH = 1000
 SCREEN_HEIGHT = 1200
 
 PADDLE_HEIGHT = 10
-PADDLE_WIDTH = 200
+PADDLE_WIDTH = 180
 START_PADDLE = pygame.Rect(
     SCREEN_WIDTH // 2, 
     (SCREEN_HEIGHT - PADDLE_HEIGHT) - SCREEN_HEIGHT // 4,
@@ -19,11 +19,12 @@ PADDLE_VELOCITY = 10
 WHITE: tuple[int, int, int] = (255, 255, 255)
 BLACK: tuple[int, int, int] = (0, 0, 0)
 RED: tuple[int, int, int] = (255, 0, 0)
+PINK: tuple[int, int, int] = (255, 102, 178)
 
 BRICK_WIDTH: int = 110
 BRICK_HEIGHT: int = 50
 COLS: int = 8 
-ROWS: int = 5
+ROWS: int = 6
 MARGIN_LEFT: int = 8
 MARGIN_TOP: int = 8
 START_X: int = (SCREEN_WIDTH - (MARGIN_LEFT * 8 + BRICK_WIDTH * 8)) / 2
@@ -35,6 +36,7 @@ clock = pygame.time.Clock()
 running = True
 
 paddle = Paddle(START_PADDLE, WHITE, PADDLE_VELOCITY)
+ball = Ball(PINK, (SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2), 12)
 
 for row in range(ROWS):
     for col in range(COLS):
@@ -42,10 +44,11 @@ for row in range(ROWS):
         y = START_Y + row * (BRICK_HEIGHT + MARGIN_TOP)
         bricks.append(Brick(rect=pygame.Rect(x, y, BRICK_WIDTH, BRICK_HEIGHT), color=RED))
 
-def game():
+def render_game():
 
     screen.fill(BLACK)
     paddle.draw(screen=screen)
+    ball.draw(screen=screen)
 
     for brick in bricks:
         brick.draw(screen=screen)
@@ -65,7 +68,7 @@ if __name__ == "__main__":
 
         # render game start
 
-        game()
+        render_game()
 
         # render game end
 

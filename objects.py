@@ -27,3 +27,26 @@ class Brick:
             color=self.color,
             rect=self.rect
         )
+
+
+@dataclass
+class Ball:
+    color: tuple[int, int, int]
+    center: tuple[int, int]
+    radius: int
+
+    def get_rect(self) -> pygame.Rect:
+        return pygame.Rect(
+            self.center[0] - self.radius,
+            self.center[1] - self.radius,
+            self.radius * 2,
+            self.radius * 2
+        )
+
+    def draw(self, screen):
+        pygame.draw.circle(
+            surface=screen,
+            color=self.color,
+            center=self.center,
+            radius=self.radius
+        )
