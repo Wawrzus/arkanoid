@@ -34,8 +34,8 @@ class Ball:
     color: tuple[int, int, int]
     center: list[int, int]
     radius: int
-    velocity_x = 3
-    velocity_y = 3
+    velocity_x = 5
+    velocity_y = 5
 
     def move(self):
         self.center[0] += self.velocity_x

@@ -53,13 +53,16 @@ def render_game():
     ball.move()
 
     if paddle.rect.colliderect(ball.get_rect()):
-        ball.velocity_y += -1
+        ball.velocity_y *= -1
     
     if ball.center[0] <= ball.radius or ball.center[0] >= SCREEN_WIDTH - ball.radius:
-        ball.velocity_x += -1
+        ball.velocity_x *= -1
 
     for brick in bricks:
         brick.draw(screen=screen)
+        if brick.rect.colliderect(ball.get_rect()):
+            ball.velocity_y *= -1
+            print("hit")
 
     keys = pygame.key.get_pressed()
     if keys[pygame.K_a] and paddle.rect.left >= 0:
