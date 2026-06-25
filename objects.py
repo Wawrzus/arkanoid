@@ -32,8 +32,15 @@ class Brick:
 @dataclass
 class Ball:
     color: tuple[int, int, int]
-    center: tuple[int, int]
+    center: list[int, int]
     radius: int
+    velocity_x = 3
+    velocity_y = 3
+
+    def move(self):
+        self.center[0] += self.velocity_x
+        self.center[1] += self.velocity_y
+
 
     def get_rect(self) -> pygame.Rect:
         return pygame.Rect(

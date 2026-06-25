@@ -36,7 +36,7 @@ clock = pygame.time.Clock()
 running = True
 
 paddle = Paddle(START_PADDLE, WHITE, PADDLE_VELOCITY)
-ball = Ball(PINK, (SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2), 12)
+ball = Ball(PINK, [SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2], 12)
 
 for row in range(ROWS):
     for col in range(COLS):
@@ -49,6 +49,14 @@ def render_game():
     screen.fill(BLACK)
     paddle.draw(screen=screen)
     ball.draw(screen=screen)
+
+    ball.move()
+
+    if paddle.rect.colliderect(ball.get_rect()):
+        ball.velocity_y += -1
+    
+    if ball.center[0] <= ball.radius or ball.center[0] >= SCREEN_WIDTH - ball.radius:
+        ball.velocity_x += -1
 
     for brick in bricks:
         brick.draw(screen=screen)
