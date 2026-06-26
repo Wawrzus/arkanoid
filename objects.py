@@ -1,5 +1,5 @@
 import pygame
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 
 @dataclass
 class Paddle:
@@ -40,7 +40,6 @@ class Ball:
     def move(self):
         self.center[0] += self.velocity_x
         self.center[1] += self.velocity_y
-
 
     def get_rect(self) -> pygame.Rect:
         return pygame.Rect(

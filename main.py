@@ -27,7 +27,7 @@ COLS: int = 8
 ROWS: int = 6
 MARGIN_LEFT: int = 8
 MARGIN_TOP: int = 8
-START_X: int = (SCREEN_WIDTH - (MARGIN_LEFT * 8 + BRICK_WIDTH * 8)) / 2
+START_X: int = (SCREEN_WIDTH - (MARGIN_LEFT * 8 + BRICK_WIDTH * 8)) // 2
 START_Y: int = 20
 bricks: list[Brick] = []
 
@@ -46,11 +46,12 @@ for row in range(ROWS):
 
 def render_game():
 
+    bricks[:] = [brick for brick in bricks if brick.hp]
+    ball.move()
+
     screen.fill(BLACK)
     paddle.draw(screen=screen)
     ball.draw(screen=screen)
-
-    ball.move()
 
     if paddle.rect.colliderect(ball.get_rect()):
         ball.velocity_y *= -1
@@ -59,10 +60,31 @@ def render_game():
         ball.velocity_x *= -1
 
     for brick in bricks:
-        brick.draw(screen=screen)
+        if brick.hp:
+            brick.draw(screen=screen)
         if brick.rect.colliderect(ball.get_rect()):
-            ball.velocity_y *= -1
-            print("hit")
+            brick.hp = 0
+            ball_center_x = ball.center[0]
+            ball_center_y = ball.center[1]
+            brick_center_x = brick.rect.centerx
+            brick_center_y = brick.rect.centery
+
+            dx = ball_center_x - brick_center_x
+            dy = ball_center_y - brick_center_y
+
+            if abs(dx) > abs(dy):
+                ball.velocity_x *= -1
+                if dx > 0:
+                    ball_center_x = brick.rect.right + ball.radius
+                else:
+                    ball_center_x = brick.rect.left - ball.radius
+            else:
+                ball.velocity_y *= -1
+                if dy > 0:
+                    ball_center_y = brick.rect.bottom + ball.radius
+                else:
+                    ball_center_y = brick.rect.top - ball.radius
+
 
     keys = pygame.key.get_pressed()
     if keys[pygame.K_a] and paddle.rect.left >= 0:
