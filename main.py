@@ -29,6 +29,7 @@ BLUE: tuple[int, int, int] = (0, 0, 255)
 font = pygame.font.SysFont('Arial', 30)
 play_text_surface = font.render('start', True, WHITE)
 exit_text_surface = font.render('exit', True, WHITE)
+loss_text_surface = font.render('loss', True, WHITE)
 
 #BRICK
 BRICK_WIDTH: int = 110
@@ -70,12 +71,17 @@ play_button = Button(START_BUTTON_POSITION, BLUE)
 exit_button = Button(EXIT_BUTTON_POSITION, BLUE)
 play_rect_text = play_text_surface.get_rect(center=(play_button.rect.centerx, play_button.rect.centery))
 exit_rect_text = exit_text_surface.get_rect(center=(exit_button.rect.centerx, exit_button.rect.centery))
+loss_rect_text = loss_text_surface.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2))
 
 for row in range(ROWS):
     for col in range(COLS):
         x = START_X + col * (BRICK_WIDTH + MARGIN_LEFT)
         y = START_Y + row * (BRICK_HEIGHT + MARGIN_TOP)
         bricks.append(Brick(rect=pygame.Rect(x, y, BRICK_WIDTH, BRICK_HEIGHT), color=RED))
+
+def render_loss():
+    screen.fill(BLACK)
+    screen.blit(loss_text_surface, loss_rect_text)
 
 def render_menu():
     screen.fill(BLACK)
@@ -85,7 +91,6 @@ def render_menu():
     screen.blit(exit_text_surface, exit_rect_text)
 
 def render_game():
-
     bricks[:] = [brick for brick in bricks if brick.hp]
     ball.move()
 
@@ -146,11 +151,22 @@ if __name__ == "__main__":
 
         # render game start
 
+        if ball.center[1] > SCREEN_HEIGHT and game_state != GAME_STATES[2]:
+            start = pygame.time.get_ticks()
+            game_state = GAME_STATES[2]
+            ball.center = [SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2]
+
+        if game_state == GAME_STATES[2] and pygame.time.get_ticks() - start > 2000:
+            game_state = GAME_STATES[0]
+
+        print(game_state)
+
         if game_state == 'menu':
             render_menu()
         if game_state == 'game':
             render_game()
-        
+        if game_state == 'loss':
+            render_loss()
 
         # render game end
 
