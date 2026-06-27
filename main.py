@@ -25,6 +25,11 @@ RED: tuple[int, int, int] = (255, 0, 0)
 PINK: tuple[int, int, int] = (255, 102, 178)
 BLUE: tuple[int, int, int] = (0, 0, 255)
 
+#FONT
+font = pygame.font.SysFont('Arial', 30)
+play_text_surface = font.render('start', True, WHITE)
+exit_text_surface = font.render('exit', True, WHITE)
+
 #BRICK
 BRICK_WIDTH: int = 110
 BRICK_HEIGHT: int = 50
@@ -41,13 +46,13 @@ BUTTON_WIDTH = SCREEN_WIDTH // 3
 BUTTON_HEIGHT = SCREEN_HEIGHT // 12
 START_BUTTON_POSITION = pygame.Rect(
     SCREEN_WIDTH // 3,
-    SCREEN_HEIGHT // 12,
+    SCREEN_HEIGHT // 3,
     BUTTON_WIDTH,
     BUTTON_HEIGHT
 )
 EXIT_BUTTON_POSITION = pygame.Rect(
     SCREEN_WIDTH // 3,
-    SCREEN_HEIGHT // 12 + 3 * BUTTON_HEIGHT,
+    SCREEN_HEIGHT // 3 + 2 * BUTTON_HEIGHT,
     BUTTON_WIDTH,
     BUTTON_HEIGHT
 )
@@ -63,6 +68,8 @@ paddle = Paddle(START_PADDLE, WHITE, PADDLE_VELOCITY)
 ball = Ball(PINK, [SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2], 12)
 play_button = Button(START_BUTTON_POSITION, BLUE)
 exit_button = Button(EXIT_BUTTON_POSITION, BLUE)
+play_rect_text = play_text_surface.get_rect(center=(play_button.rect.centerx, play_button.rect.centery))
+exit_rect_text = exit_text_surface.get_rect(center=(exit_button.rect.centerx, exit_button.rect.centery))
 
 for row in range(ROWS):
     for col in range(COLS):
@@ -73,7 +80,9 @@ for row in range(ROWS):
 def render_menu():
     screen.fill(BLACK)
     play_button.draw(screen=screen)
+    screen.blit(play_text_surface, play_rect_text)
     exit_button.draw(screen=screen)
+    screen.blit(exit_text_surface, exit_rect_text)
 
 def render_game():
 
