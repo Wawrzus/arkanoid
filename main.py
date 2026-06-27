@@ -44,6 +44,9 @@ for row in range(ROWS):
         y = START_Y + row * (BRICK_HEIGHT + MARGIN_TOP)
         bricks.append(Brick(rect=pygame.Rect(x, y, BRICK_WIDTH, BRICK_HEIGHT), color=RED))
 
+def render_menu():
+    ...
+
 def render_game():
 
     bricks[:] = [brick for brick in bricks if brick.hp]
