@@ -56,3 +56,16 @@ class Ball:
             center=self.center,
             radius=self.radius
         )
+
+
+@dataclass
+class Button:
+    rect: pygame.Rect
+    color: tuple[int, int, int]
+
+    def draw(self, screen):
+        pygame.draw.rect(
+            surface=screen,
+            color=self.color,
+            rect=self.rect
+        )
