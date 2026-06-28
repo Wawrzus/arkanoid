@@ -73,11 +73,14 @@ play_rect_text = play_text_surface.get_rect(center=(play_button.rect.centerx, pl
 exit_rect_text = exit_text_surface.get_rect(center=(exit_button.rect.centerx, exit_button.rect.centery))
 loss_rect_text = loss_text_surface.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2))
 
-for row in range(ROWS):
-    for col in range(COLS):
-        x = START_X + col * (BRICK_WIDTH + MARGIN_LEFT)
-        y = START_Y + row * (BRICK_HEIGHT + MARGIN_TOP)
-        bricks.append(Brick(rect=pygame.Rect(x, y, BRICK_WIDTH, BRICK_HEIGHT), color=RED))
+def _create_bricks(bricks: list[Brick]):
+    for row in range(ROWS):
+        for col in range(COLS):
+            x = START_X + col * (BRICK_WIDTH + MARGIN_LEFT)
+            y = START_Y + row * (BRICK_HEIGHT + MARGIN_TOP)
+            bricks.append(Brick(rect=pygame.Rect(x, y, BRICK_WIDTH, BRICK_HEIGHT), color=RED))
+
+_create_bricks(bricks=bricks)
 
 def render_loss():
     screen.fill(BLACK)
@@ -154,8 +157,10 @@ if __name__ == "__main__":
 
         # render game start
 
-        if not bricks[:] and game_state != GAME_STATES[0]:
+        if not bricks and game_state != GAME_STATES[0]:
             game_state = GAME_STATES[0]
+            _create_bricks(bricks=bricks)
+            ball.center = [SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2]
 
         if ball.center[1] > SCREEN_HEIGHT and game_state != GAME_STATES[2]:
             start = pygame.time.get_ticks()
