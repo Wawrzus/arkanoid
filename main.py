@@ -35,7 +35,7 @@ loss_text_surface = font.render('loss', True, WHITE)
 BRICK_WIDTH: int = 110
 BRICK_HEIGHT: int = 50
 COLS: int = 8 
-ROWS: int = 6
+ROWS: int = 1
 MARGIN_LEFT: int = 8
 MARGIN_TOP: int = 8
 START_X: int = (SCREEN_WIDTH - (MARGIN_LEFT * 8 + BRICK_WIDTH * 8)) // 2
@@ -104,6 +104,9 @@ def render_game():
     if ball.center[0] <= ball.radius or ball.center[0] >= SCREEN_WIDTH - ball.radius:
         ball.velocity_x *= -1
 
+    if ball.center[1] - ball.radius <= 0:
+        ball.velocity_y *= -1
+
     for brick in bricks:
         if brick.hp:
             brick.draw(screen=screen)
@@ -150,6 +153,9 @@ if __name__ == "__main__":
                     running = False
 
         # render game start
+
+        if not bricks[:] and game_state != GAME_STATES[0]:
+            game_state = GAME_STATES[0]
 
         if ball.center[1] > SCREEN_HEIGHT and game_state != GAME_STATES[2]:
             start = pygame.time.get_ticks()
