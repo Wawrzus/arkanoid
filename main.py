@@ -30,6 +30,7 @@ font = pygame.font.SysFont('Arial', 30)
 play_text_surface = font.render('start', True, WHITE)
 exit_text_surface = font.render('exit', True, WHITE)
 loss_text_surface = font.render('loss', True, WHITE)
+win_text_surface = font.render('win', True, WHITE)
 
 #BRICK
 BRICK_WIDTH: int = 110
@@ -58,7 +59,7 @@ EXIT_BUTTON_POSITION = pygame.Rect(
     BUTTON_HEIGHT
 )
 
-GAME_STATES: tuple[str, str, str] = ('menu', 'game', 'loss')
+GAME_STATES: tuple[str, str, str] = ('menu', 'game', 'loss', 'win')
 
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 clock = pygame.time.Clock()
@@ -72,6 +73,7 @@ exit_button = Button(EXIT_BUTTON_POSITION, BLUE)
 play_rect_text = play_text_surface.get_rect(center=(play_button.rect.centerx, play_button.rect.centery))
 exit_rect_text = exit_text_surface.get_rect(center=(exit_button.rect.centerx, exit_button.rect.centery))
 loss_rect_text = loss_text_surface.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2))
+win_rect_text = win_text_surface.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2))
 
 def _create_bricks(bricks: list[Brick]):
     for row in range(ROWS):
@@ -85,6 +87,10 @@ _create_bricks(bricks=bricks)
 def render_loss():
     screen.fill(BLACK)
     screen.blit(loss_text_surface, loss_rect_text)
+
+def render_win():
+    screen.fill(BLACK)
+    screen.blit(win_text_surface, win_rect_text)
 
 def render_menu():
     screen.fill(BLACK)
@@ -157,8 +163,9 @@ if __name__ == "__main__":
 
         # render game start
 
-        if not bricks and game_state != GAME_STATES[0]:
-            game_state = GAME_STATES[0]
+        if not bricks and game_state != GAME_STATES[3]:
+            start = pygame.time.get_ticks()
+            game_state = GAME_STATES[3]
             _create_bricks(bricks=bricks)
             ball.center = [SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2]
 
@@ -170,7 +177,8 @@ if __name__ == "__main__":
         if game_state == GAME_STATES[2] and pygame.time.get_ticks() - start > 2000:
             game_state = GAME_STATES[0]
 
-        print(game_state)
+        if game_state == GAME_STATES[3] and pygame.time.get_ticks() - start > 2000:
+            game_state = GAME_STATES[0]
 
         if game_state == 'menu':
             render_menu()
@@ -178,6 +186,8 @@ if __name__ == "__main__":
             render_game()
         if game_state == 'loss':
             render_loss()
+        if game_state == 'win':
+            render_win()
 
         # render game end
 
