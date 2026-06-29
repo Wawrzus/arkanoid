@@ -19,7 +19,7 @@ class Paddle:
 class Brick:
     rect: pygame.Rect
     color: tuple[int, int, int]
-    hp: int = 1
+    hp: int = 2
 
     def draw(self, screen):
         pygame.draw.rect(
@@ -67,5 +67,6 @@ class Button:
         pygame.draw.rect(
             surface=screen,
             color=self.color,
-            rect=self.rect
+            rect=self.rect,
+            border_radius=10
         )

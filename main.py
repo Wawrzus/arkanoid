@@ -75,14 +75,24 @@ exit_rect_text = exit_text_surface.get_rect(center=(exit_button.rect.centerx, ex
 loss_rect_text = loss_text_surface.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2))
 win_rect_text = win_text_surface.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2))
 
-def _create_bricks(bricks: list[Brick]):
+def _reset_paddle():
+    paddle.rect.centerx = SCREEN_WIDTH // 2
+    
+def _reset_ball():
+    ball.center = [SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2]
+    
+def _reset_bricks(bricks: list[Brick]):
+    bricks.clear()
     for row in range(ROWS):
         for col in range(COLS):
             x = START_X + col * (BRICK_WIDTH + MARGIN_LEFT)
             y = START_Y + row * (BRICK_HEIGHT + MARGIN_TOP)
             bricks.append(Brick(rect=pygame.Rect(x, y, BRICK_WIDTH, BRICK_HEIGHT), color=RED))
 
-_create_bricks(bricks=bricks)
+def _reset_world(bricks):
+    _reset_paddle()
+    _reset_ball()
+    _reset_bricks(bricks=bricks)
 
 def render_loss():
     screen.fill(BLACK)
@@ -157,22 +167,21 @@ if __name__ == "__main__":
                 running = False
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if pygame.Rect.collidepoint(play_button.rect, pygame.mouse.get_pos()):
+                    _reset_world(bricks=bricks)
                     game_state = GAME_STATES[1]
                 if pygame.Rect.collidepoint(exit_button.rect, pygame.mouse.get_pos()):
                     running = False
 
         # render game start
 
-        if not bricks and game_state != GAME_STATES[3]:
+        if not bricks and game_state == GAME_STATES[1]:
             start = pygame.time.get_ticks()
             game_state = GAME_STATES[3]
-            _create_bricks(bricks=bricks)
-            ball.center = [SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2]
 
         if ball.center[1] > SCREEN_HEIGHT and game_state != GAME_STATES[2]:
+            _reset_world(bricks=bricks)
             start = pygame.time.get_ticks()
             game_state = GAME_STATES[2]
-            ball.center = [SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2]
 
         if game_state == GAME_STATES[2] and pygame.time.get_ticks() - start > 2000:
             game_state = GAME_STATES[0]
